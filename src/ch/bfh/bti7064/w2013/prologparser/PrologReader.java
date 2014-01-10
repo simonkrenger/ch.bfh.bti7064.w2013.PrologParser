@@ -8,7 +8,7 @@ public class PrologReader {
 
 	private File inputfile;
 	private Scanner scanner;
-	
+
 	public PrologReader(File in) {
 		try {
 			this.inputfile = in;
@@ -21,20 +21,25 @@ public class PrologReader {
 
 	public String preprocess() {
 		String preprocessed = "";
-		
-		
-		 while (scanner.hasNextLine()) {
-			 String line = scanner.nextLine();
 
-			 for (int i = 0; i < line.length(); i++) {
-				    char c = line.charAt(i);        
-				    if(c == '%') {
-				    	break;
-				    } else if(c != ' ' && c != '\t') {
-				    	preprocessed += c;
-				    }
+		// Remove %-style comments, whitespaces and tabs
+		while (scanner.hasNextLine()) {
+			String line = scanner.nextLine();
+
+			for (int i = 0; i < line.length(); i++) {
+				char c = line.charAt(i);
+				if (c == '%') {
+					break;
+				} else if (c != ' ' && c != '\t') {
+					preprocessed += c;
 				}
-		 }
-		 return preprocessed;
+			}
+		}
+
+		// Also remove /* ... */ style comments:
+		preprocessed = preprocessed.replaceAll(
+				"/\\*([^*]|[\r\n]|(\\*+([^*/]|[\r\n])))*\\*+/", "");
+
+		return preprocessed;
 	}
 }
