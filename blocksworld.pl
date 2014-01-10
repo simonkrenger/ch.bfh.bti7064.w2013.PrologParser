@@ -36,7 +36,7 @@ empty_stack([]).
 
     % member_stack tests if an element is a member of a stack
 
-member_stack(E, S) :- member(E, S). 
+member_stack(E, S) :- member(E, S).
 
     % stack performs the push, pop and peek operations
     % to push an element onto the stack
