@@ -4,12 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class PrologReader {
+public class PrologPreprocessor {
 
 	private File inputfile;
 	private Scanner scanner;
 
-	public PrologReader(File in) {
+	public PrologPreprocessor(File in) {
 		try {
 			this.inputfile = in;
 			scanner = new Scanner(this.inputfile);
