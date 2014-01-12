@@ -26,10 +26,17 @@ public class PrologPreprocessor {
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 
+			boolean literal_mode = false;
+			
 			for (int i = 0; i < line.length(); i++) {
 				char c = line.charAt(i);
 				if (c == '%') {
 					break;
+				} else if(c == '\'') {
+					literal_mode = !literal_mode;
+				} else if (c == ' ' && literal_mode) {
+					// Keep spaces within literals
+					preprocessed += c;
 				} else if (c != ' ' && c != '\t') {
 					preprocessed += c;
 				}

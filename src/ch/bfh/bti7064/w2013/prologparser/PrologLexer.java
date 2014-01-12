@@ -12,12 +12,15 @@ public class PrologLexer {
 
 	// Underscore
 	static final String UNDER = "_";
-	
+
 	// Digits
 	static final String DIGITS = "[0-9]";
 
-	// Special chars except "_", ":" and "-"
-	static final String SPECIAL = "[^A-Za-z0-9_:-]";
+	// Special chars except "_", ":", "'" and "-"
+	static final String SPECIAL = "[^A-Za-z0-9_:\\-']";
+
+	// Single quotation mark "'"
+	static final String QUOT_MARK = "'";
 
 	// A colon
 	static final String COLON = ":";
@@ -40,7 +43,7 @@ public class PrologLexer {
 		public String toString() {
 			return String.format("<%s>", data);
 		}
-		
+
 		public void append(char c) {
 			this.data += String.valueOf(c);
 		}
@@ -52,6 +55,7 @@ public class PrologLexer {
 		LexerState cons = new LexerState("CONSTANT");
 		LexerState var = new LexerState("VARIABLE");
 		LexerState spec = new LexerState("SPECIAL_CHAR");
+		LexerState litr = new LexerState("LITERAL");
 		LexerState colon = new LexerState("COLON");
 		LexerState dash = new LexerState("DASH");
 
@@ -77,7 +81,17 @@ public class PrologLexer {
 		spec.addTranslation(new LexerStateTranslation(LOWER_CHARS, cons, true));
 		spec.addTranslation(new LexerStateTranslation(DIGITS, cons, true));
 		spec.addTranslation(new LexerStateTranslation(SPECIAL, spec, true));
+		spec.addTranslation(new LexerStateTranslation(QUOT_MARK, litr, true));
 		spec.addTranslation(new LexerStateTranslation(COLON, colon, true));
+
+		litr.addTranslation(new LexerStateTranslation(UPPER_CHARS, litr, false));
+		litr.addTranslation(new LexerStateTranslation(LOWER_CHARS, litr, false));
+		litr.addTranslation(new LexerStateTranslation(UNDER, litr, false));
+		litr.addTranslation(new LexerStateTranslation(DIGITS, litr, false));
+		litr.addTranslation(new LexerStateTranslation(SPECIAL, litr, false));
+		litr.addTranslation(new LexerStateTranslation(COLON, litr, false));
+		litr.addTranslation(new LexerStateTranslation(DASH, litr, false));
+		litr.addTranslation(new LexerStateTranslation(QUOT_MARK, spec, true));
 
 		colon.addTranslation(new LexerStateTranslation(DASH, dash, false));
 
@@ -85,6 +99,7 @@ public class PrologLexer {
 		dash.addTranslation(new LexerStateTranslation(SPECIAL, spec, true));
 		dash.addTranslation(new LexerStateTranslation(LOWER_CHARS, cons, true));
 		dash.addTranslation(new LexerStateTranslation(DIGITS, cons, true));
+		dash.addTranslation(new LexerStateTranslation(QUOT_MARK, litr, true));
 
 		// Init
 		currentState = init;
@@ -92,7 +107,7 @@ public class PrologLexer {
 
 	public ArrayList<Token> tokenize(String input) {
 		ArrayList<Token> tokens = new ArrayList<Token>();
-		
+
 		currentToken = new Token("");
 
 		for (int i = 0; i < input.length(); i++) {
@@ -100,7 +115,7 @@ public class PrologLexer {
 
 			LexerStateTranslation t = currentState.nextTranslation(currentChar);
 			if (t != null) {
-				if(t.createsToken) {
+				if (t.createsToken) {
 					tokens.add(currentToken);
 					currentToken = new Token("");
 				}
