@@ -6,4 +6,8 @@
 *.ear
 /bin
 
+# Tex
 *.swp
+*.log
+*.aux
+*.synctex.gz
