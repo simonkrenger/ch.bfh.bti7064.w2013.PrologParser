@@ -7,7 +7,11 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * @author simon
+ * 
+ * Program to tokenize a Prolog program
+ * 
+ * @author Simon Krenger <krens1@bfh.ch>
+ * @author Franziska Corradi <corff1@bfh.ch>
  * 
  */
 public class PrologParser {
@@ -24,12 +28,11 @@ public class PrologParser {
 
 				PrologLexer lex = new PrologLexer();
 				ArrayList<PrologLexer.Token> tlist = lex.tokenize(prog);
-				
-				for(PrologLexer.Token t : tlist) {
+
+				for (PrologLexer.Token t : tlist) {
 					System.out.println(t);
 				}
-				
-				
+
 				System.out.println(prog);
 			} else {
 				System.err.println("Error: Specified file does not exist.");
