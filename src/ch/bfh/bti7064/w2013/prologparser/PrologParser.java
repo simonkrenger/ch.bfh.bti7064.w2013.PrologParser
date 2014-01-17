@@ -23,17 +23,19 @@ public class PrologParser {
 		if (args.length == 1) {
 			File f = new File(args[0]);
 			if (f.exists() && !f.isDirectory()) {
-				PrologPreprocessor preader = new PrologPreprocessor(f);
-				String prog = preader.preprocess();
+				PrologPreprocessor proc = new PrologPreprocessor(f);
+				String prog = proc.preprocess();
 
-				PrologLexer lex = new PrologLexer();
-				ArrayList<PrologLexer.Token> tlist = lex.tokenize(prog);
+				PrologScanner lex = new PrologScanner();
+				ArrayList<PrologScanner.Token> tlist = lex.tokenize(prog);
 
-				for (PrologLexer.Token t : tlist) {
+				System.out.println("Preprocessed output:");
+				System.out.println(prog);
+				
+				System.out.println("Tokens:");
+				for (PrologScanner.Token t : tlist) {
 					System.out.println(t);
 				}
-
-				System.out.println(prog);
 			} else {
 				System.err.println("Error: Specified file does not exist.");
 				printUsage();
@@ -46,8 +48,7 @@ public class PrologParser {
 	}
 
 	private static void printUsage() {
-		System.err.println("Usage:");
-		System.err.println("PrologParser file.pl");
+		System.out.println("Usage:");
+		System.out.println("java -jar PrologParser.jar file.pl");
 	}
-
 }

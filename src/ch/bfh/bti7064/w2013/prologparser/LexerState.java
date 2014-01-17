@@ -58,6 +58,10 @@ public class LexerState {
 		}
 		return null;
 	}
+	
+	public String getName() {
+		return this.stateName;
+	}
 
 	@Override
 	public String toString() {

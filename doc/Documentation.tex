@@ -4,6 +4,8 @@
 \usepackage{amssymb}
 \usepackage[utf8]{inputenc} 
 \usepackage{tikz}
+\usepackage{listings}
+\usepackage{courier}
 \usetikzlibrary{automata,positioning}
 
 \title{Prolog Parser}
@@ -12,16 +14,31 @@
 \begin{document}
 \maketitle
 \section{Einleitung}
-
-\section{Regulärer Ausdruck}
+Das vorliegende Projekt verwendet einen deterministischen endlichen Automaten, um die Tokens des Prolog-Programms zu analysieren.
 
 \section{Übergangstabelle}
+In der Datei \lq\lq{}doc/Transitionstabelle.xlsx\rq\rq{} findet sich die vom Programm verwendete Transitionstabelle.
+
+\section{Programmbeschrieb}
+Das Kommandozeilenprogramm (JAR) soll mittels des folgenden Befehl gestartet werden:
+\begin{lstlisting}
+$ java -jar PrologParser.jar inputfile.pl
+\end{lstlisting}
+Das Programm selbst verwendet die folgenden Klassen:
+\begin{itemize}
+\item \underline{PrologParser}: Einstiegspunkt des Programms. Diese Klasse enthält die \texttt{main()} Methode und erstellt die Instanzen der anderen Klassen.
+\item \underline{PrologPreprocessor}: Diese Klasse wird dazu verwendet, den Quellcode einzulesen und für den Scanner vorzubereiten. Im Preprocessor werden alle Kommentare entfernt, alle Spezialzeichen entfernt (Methode \texttt{preprocess()}).
+\item \underline{PrologScanner}: Diese Klasse stellt den Hauptteil des Programms dar. Hier wird der Automat erstellt und die Transitionen definiert. Die \texttt{tokenize(String input)} Methode liefert dann die Tokens zurück.
+\item \underline{LexerState}: Klasse für den Automaten, repräsentiert einen Zustand des Automaten.
+\item \underline{LexerStateTranslation}: Klasse für den Automaten, repräsentiert eine Zustandsänderung des Automaten.
+
+\end{itemize}
 
 \newpage
 \section{Deterministischer endlicher Automat}
 Folgender Graph zeigt den Automaten für den vereinfachten PrologParser.\\\\
 \begin{tikzpicture}[shorten >=1pt,node distance=3cm,auto] 
-	\node[state,initial] (q_0)   {$INIT$}; 
+	\node[state,initial] (q_0) {$INIT$}; 
 	\node[state] (q_1) [right=of q_0] {$CONST$}; 
 	\node[state] (q_2) [below=of q_1] {$SPECIAL$}; 
 	\node[state] (q_3) [left =of q_2] {$VARIABLE$}; 

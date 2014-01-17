@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * @author Franziska Corradi <corff1@bfh.ch>
  * 
  */
-public class PrologLexer {
+public class PrologScanner {
 
 	// What follows are the possible classes of characters accepted by this
 	// finite state automata.
@@ -67,6 +67,7 @@ public class PrologLexer {
 	 * 
 	 */
 	public static class Token {
+		public String type;
 		public String data;
 
 		public Token(String data) {
@@ -75,11 +76,15 @@ public class PrologLexer {
 
 		@Override
 		public String toString() {
-			return String.format("<%s>", data);
+			return String.format("<'%s', %s>", data, type);
 		}
 
 		public void append(char c) {
 			this.data += String.valueOf(c);
+		}
+		
+		public void setType(String type) {
+			this.type = type;
 		}
 	}
 
@@ -87,7 +92,7 @@ public class PrologLexer {
 	 * Constructor for the class. Constructs all states and configures the
 	 * translations.
 	 */
-	public PrologLexer() {
+	public PrologScanner() {
 
 		LexerState init = new LexerState("INIT");
 		LexerState cons = new LexerState("CONSTANT");
@@ -153,6 +158,7 @@ public class PrologLexer {
 			if (t != null) {
 				if (t.createsToken) {
 					tokens.add(currentToken);
+					currentToken.setType(currentState.getName());
 					currentToken = new Token("");
 				}
 				currentToken.append(currentChar);
